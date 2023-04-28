@@ -7,6 +7,8 @@ export default {
     name: 'App',
     data() {
         return {
+            youtube : null,
+            debug : true,
             video: { video_id: "", loop: 1 },
         }
     },
@@ -47,25 +49,15 @@ export default {
 
 <template>
     <div>
-        <div>
-
-            video_id : <input type="text" v-model="video.video_id" /><br />
-            loop : <input type="number" v-model.number="video.loop" /><br />
-            <br />
-            currentVideoID : {{ videoUrl }} <br />
-            <br />
-
-            <button @click="applyConfig">Apply</button>
-            <button @click="playCurrentVideo">Play</button>
-            <button @click="stopCurrentVideo">Stop</button>
-            <button @click="pauseCurrentVideo">Pause</button>
-
-        </div>
-
-        <br />
-
-        <YoutubeVue3 ref="youtube" :controls="1" :videoid="video.video_id" :loop="video.loop" :width="480" :height="320"
-            @ended="onEnded" @paused="onPaused" @played="onPlayed" />
+        <YoutubeVue3 ref="youtube" :controls="1" :videoid="video.video_id" :loop="video.loop" :width="480" :height="320" @ended="onEnded" @paused="onPaused" @played="onPlayed"  />
     </div>
+
+    <div v-if="debug" style="background-color:#fafafa;border-top:1px solid #ddd;padding:8px 16px;">
+        <div>
+            <label>재생 시간</label>
+            <div>{{ youtube.player.getCurrentTime() }}</div>
+        </div>
+    </div>
+
 </template>
   
