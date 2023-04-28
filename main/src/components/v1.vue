@@ -11,7 +11,7 @@ export default {
         }
     },
     mounted() {
-        this.video.video_id = location.hash;
+        this.video.video_id = location.hash.substring(1, 99);
         this.video.loop = 1;
     },
     components: {
