@@ -19,26 +19,25 @@ jobs:
         node-version: [18.x]
 
     steps:
-    
+
 
     - name: Node.js ${{ matrix.node-version }} 체크아웃
       uses: actions/checkout@master
+
 
     - name: Set up Node.js
       uses: actions/setup-node@master
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Install dependencies
-      run: yarn install
+    - name: Install Dependencies
+      run: npm install
 
-    - name: Build page
-      run: yarn build
-      env:
-        NODE_ENV: production
-
-    - name: Deploy to gh-pages
-      uses: peaceiris/actions-gh-pages@v3
+    - name: Build
+      run: npm run build
+      
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@4.1.4
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./dist
+        branch: gh-pages # 배포할 브랜치 이름으로 변경
+        folder: dist
