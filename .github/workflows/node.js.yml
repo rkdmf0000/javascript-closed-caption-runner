@@ -22,10 +22,11 @@ jobs:
     - name: Node.js ${{ matrix.node-version }} 체크아웃
       uses: actions/checkout@v3
       
-    - name: 위치 찍기
-      run: 
-        ls -al
-        cat pwd
+    - name: print Path
+      run: echo ls
+      
+    - name: 위치 이동
+      run: cd /main
 
     - name: VUE3 빌드하기
-      run: cd /workspaces/javascript-closed-caption-runner/main && yarn build
+      run: yarn build
