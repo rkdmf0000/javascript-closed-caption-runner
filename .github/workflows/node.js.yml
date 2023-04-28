@@ -2,11 +2,21 @@ name: Deployment
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
 jobs:
-  deploy:
-    runs-on: ubuntu-18.04
+  build:
+
+    runs-on: ubuntu-latest
+
+    
+jobs:
+  build:
+  #deploy:
+    runs-on: ubuntu-latest
+    #runs-on: ubuntu-18.04
 
     steps:
     - name: Checkout source code
