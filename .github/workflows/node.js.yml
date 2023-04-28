@@ -22,11 +22,5 @@ jobs:
     - name: Node.js ${{ matrix.node-version }} 체크아웃
       uses: actions/checkout@v3
       
-    - name: print Path
-      run: echo ls
-      
-    - name: 위치 이동
-      run: cd /main
-
     - name: VUE3 빌드하기
       run: yarn build
