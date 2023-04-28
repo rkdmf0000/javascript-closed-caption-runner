@@ -54,8 +54,9 @@ export default {
 
     <div v-if="debug" style="background-color:#fafafa;border-top:1px solid #ddd;padding:8px 16px;">
         <div>
+            <!--youtube.player.getCurrentTime()-->
             <label>재생 시간</label>
-            <div>{{ youtube.player.getCurrentTime() }}</div>
+            <div>{{ youtube }}</div>
         </div>
     </div>
 
