@@ -1,5 +1,5 @@
 
-<script lang="js">
+<script>
 import { YoutubeVue3 } from 'youtube-vue3'
 
 export default {
@@ -7,9 +7,11 @@ export default {
     name: 'App',
     data() {
         return {
-            youtube : null,
-            debug : true,
+            debug: true,
             video: { video_id: "", loop: 1 },
+            currentTime: 0,
+            timeCheck: 291,
+            timer: undefined
         }
     },
     mounted() {
@@ -20,7 +22,40 @@ export default {
         YoutubeVue3,
     },
     methods: {
+
+
+        startTimer() {
+            this.timer = setInterval(()=>{
+                this.timerAction();        
+            }, this.timeCheck);
+        },
+        stopTimer() {
+            clearTimeout(this.timer);
+        },
+
+        async timerAction() {
+            const sec = await this.$refs.youtube.player.getCurrentTime();
+            this.currentTime = sec;
+        },
+
+        convertTimeToSeconds(timeStr) {
+            const timeArr = timeStr.split(':').map(parseFloat); // ':'를 구분자로 나누고, 문자열을 실수형 숫자로 변환합니다.
+            const hours = timeArr[0] * 3600; // 시간을 초 단위로 변환합니다.
+            const minutes = timeArr[1] * 60; // 분을 초 단위로 변환합니다.
+            const seconds = timeArr[2] + (timeArr[3] / 1000); // 초와 소수점 이하의 값을 더해줍니다.
+            const totalSeconds = hours + minutes + seconds; // 총 초 단위를 계산합니다.
+            return parseFloat(totalSeconds.toFixed(5)); // 소수점 다섯 자리까지 반올림하여 반환합니다.
+        },
+
+        //wlTMXFbPfKw
+        applyConfig() {
+            this.video = {
+                loop : 0,
+                video_id : "hlNWfslbSGA"
+            }
+        },
         playCurrentVideo() {
+            
             this.$refs.youtube.player.playVideo();
         },
         stopCurrentVideo() {
@@ -29,19 +64,19 @@ export default {
         pauseCurrentVideo() {
             this.$refs.youtube.player.pauseVideo();
         },
-
+        onPlayed() {
+            console.log("## OnPlayed")
+            this.startTimer();
+        },
         onEnded() {
             console.log("## OnEnded")
-            console.log(`path : ${location.pathname}  /  search : ${location.search}`);
+            this.stopTimer();
         },
         onPaused() {
             console.log("## OnPaused")
-            console.log(`path : ${location.pathname}  /  search : ${location.search}`);
+            this.stopTimer();
         },
-        onPlayed() {
-            console.log("## OnPlayed")
-            console.log(`path : ${location.pathname}  /  search : ${location.search}`);
-        },
+
     },
 }
 </script>
@@ -56,8 +91,15 @@ export default {
         <div>
             <!--youtube.player.getCurrentTime()-->
             <label>재생 시간</label>
-            <div>{{ youtube }}</div>
+            <div>{{ currentTime }}</div>
         </div>
+
+
+        <button @click="applyConfig">Apply</button>
+        <button @click="playCurrentVideo">Play</button>
+        <button @click="stopCurrentVideo">Stop</button>
+        <button @click="pauseCurrentVideo">Pause</button>
+
     </div>
 
 </template>
