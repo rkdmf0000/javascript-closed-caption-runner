@@ -1,43 +1,35 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
-name: Node.js VUE3 Yarn BUILD
+name: Deployment
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
+    branches:
+      - master
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x]
+  deploy:
+    runs-on: ubuntu-18.04
 
     steps:
-
-
-    - name: Node.js ${{ matrix.node-version }} 체크아웃
+    - name: Checkout source code
       uses: actions/checkout@master
-
 
     - name: Set up Node.js
       uses: actions/setup-node@master
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 14.x
 
-    - name: Install Dependencies
-      run: npm install
+    - name: Install dependencies
+      run: yarn install
 
-    - name: Build
-      run: npm run build
-      
-    - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@4.1.4
+    - name: Test unit
+      run: yarn test:unit
+
+    - name: Build page
+      run: yarn build
+      env:
+        NODE_ENV: production
+
+    - name: Deploy to gh-pages
+      uses: peaceiris/actions-gh-pages@v3
       with:
-        branch: gh-pages # 배포할 브랜치 이름으로 변경
-        folder: dist
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist
