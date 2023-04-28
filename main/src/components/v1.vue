@@ -46,9 +46,11 @@ export default {
         },
         onPaused() {
             console.log("## OnPaused")
+            console.log(`path : ${location.pathname}  /  search : ${location.search}`);
         },
         onPlayed() {
             console.log("## OnPlayed")
+            console.log(`path : ${location.pathname}  /  search : ${location.search}`);
         },
     },
 }
