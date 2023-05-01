@@ -237,9 +237,9 @@ export default {
 
     </div>
 
-    <div style="z-index:9999;position:fixed;bottom:10%;left:0;right:0;">
+    <div style="z-index:2;position:fixed;bottom:10%;left:0;right:0;">
 
-        <div style="position:absolute;bottom:0;left:0;right:0;font-size: 36px;" class="ccarea">
+        <div style="position:absolute;bottom:0;left:0;font-size: 24px;left: 50%;transform: translateX(-50%);" class="ccarea">
             <div v-for="(buffer, index) in currentCC" :key="index">
                 <p style="background: rgb(0 0 0 / 69%);color:#fafafa;">{{ buffer }}</p>
             </div>
@@ -262,5 +262,6 @@ export default {
 }
 
 .ccarea * {
-    display: inline-block;
-}</style>
+    display: block;
+}
+</style>
