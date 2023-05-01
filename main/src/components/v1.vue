@@ -11,10 +11,11 @@ export default {
     name: 'App',
     data() {
         return {
+            window: window,
             debug: true,
             video: { video_id: "", loop: 1 },
             currentTime: 0,
-            timeCheck: 1000/60,
+            timeCheck: 1000 / 60,
             timer: undefined,
             vtt: [],
             currentCC: [],
@@ -29,7 +30,7 @@ export default {
         this.getRequest('https://raw.githubusercontent.com/rkdmf0000/javascript-closed-caption-runner/main/main/dist/test1.smi')
             .then(response => {
 
-                const vtt = subsrt.convert(response, {format: "vtt", fps: 25});
+                const vtt = subsrt.convert(response, { format: "vtt", fps: 25 });
                 const captions = this.parseSmiFile(vtt);
                 this.vtt = captions;
 
@@ -139,13 +140,13 @@ export default {
             if (this.vtt.length != 0) {
                 const arr = this.getCaptionsInRange(this.vtt, this.currentTime);
                 if (arr.length != 0) {
-                    arr.map((buffer)=>{
+                    arr.map((buffer) => {
                         // console.log(buffer.text);
                         this.currentCC.push(buffer.text);
                     })
                 }
             }
-            
+
 
         },
 
@@ -194,16 +195,17 @@ export default {
 
 
 <template>
-    <div>
-        <YoutubeVue3 ref="youtube" :controls="1" :videoid="video.video_id" :loop="video.loop" :width="480" :height="320"
-            @ended="onEnded" @paused="onPaused" @played="onPlayed" />
-    </div>
+    <YoutubeVue3 style="z-index:1; position:fixed;top:0;bottom:0;left:0;right:0;" ref="youtube" :controls="1" :videoid="video.video_id"
+        :loop="video.loop" :width="window.innerWidth" :height="window.innerHeight" @ended="onEnded" @paused="onPaused"
+        @played="onPlayed" />
 
-    <div>
-        디버그 모드 : {{ debug }}
-    </div>
 
-    <div v-if="debug" style="background-color:#fafafa;border-top:1px solid #ddd;padding:8px 16px;">
+    <div v-if="debug"
+        style="z-index:1;position:fixed;top:0;left:0;background-color:#fafafa;border-top:1px solid #ddd;padding:8px 16px;">
+        <div>
+            디버그 모드 : {{ debug }}
+        </div>
+
         <div>
             <!--youtube.player.getCurrentTime()-->
             <label>재생 시간</label>
@@ -216,7 +218,7 @@ export default {
         <hr />
 
         <div>
-            
+
             비디오 상태 : {{ video }}<br />
             갱신 주기 : {{ timeCheck }}<br />
             타이머 아이디 : {{ timer }}<br />
@@ -224,7 +226,7 @@ export default {
         </div>
 
         <div>
-            실시간 자막 : 
+            실시간 자막 :
             {{ currentCC }}
         </div>
 
@@ -234,5 +236,29 @@ export default {
         <button @click="pauseCurrentVideo">정지</button>
 
     </div>
+
+    <div style="z-index:9999;position:fixed;bottom:10%;left:0;right:0;">
+
+        <div style="position:absolute;bottom:0;left:0;right:0;font-size: 36px;" class="ccarea">
+            <p v-for="(buffer) in currentCC" style="background: rgb(0 0 0 / 69%);color:#fafafa;">{{ buffer }}</p>
+        </div>
+
+    </div>
 </template>
-  
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.ccarea {
+    display: block;
+    text-align: center;
+}
+
+.ccarea * {
+    display: inline-block;
+}</style>
