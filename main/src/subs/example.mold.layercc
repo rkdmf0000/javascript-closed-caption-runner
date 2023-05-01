@@ -1,0 +1,25 @@
+<cc>
+	<env>
+		[
+            * {
+                font-size: 12px,
+            },
+
+
+        ]
+	</env>
+	<xxx>
+        -[instance caption]
+		<layer />
+        
+        -[layered caption but style applied]
+        <layer style="text-border" />
+
+        -[layered caption]
+        <layer>
+            <text />
+            <text@absolute />
+		</layer>
+	</xxx>	
+</cc>
+
