@@ -2,6 +2,9 @@
 <script>
 import { YoutubeVue3 } from 'youtube-vue3';
 import { WebVTTParser } from 'webvtt-parser';
+import subsrt from 'subsrt'
+
+//https://github.com/papnkukn/subsrt
 
 export default {
 
@@ -11,8 +14,10 @@ export default {
             debug: true,
             video: { video_id: "", loop: 1 },
             currentTime: 0,
-            timeCheck: 291,
-            timer: undefined
+            timeCheck: 1000/60,
+            timer: undefined,
+            vtt: [],
+            currentCC: []
         }
     },
     mounted() {
@@ -20,53 +25,18 @@ export default {
         this.video.loop = 1;
 
 
-        this.getRequest('/test1.smi')
+        this.getRequest('https://raw.githubusercontent.com/rkdmf0000/javascript-closed-caption-runner/main/main/dist/test1.smi')
             .then(response => {
-                console.log(response);
+
+                const vtt = subsrt.convert(response, {format: "vtt", fps: 25});
+                const captions = this.parseSmiFile(vtt);
+                this.vtt = captions;
+
             })
             .catch(error => {
                 console.error(error);
             });
 
-        const xxx = `WEBVTT
-<SAMI>
-<HEAD>
-<TITLE>Lorem ipsum</TITLE>
-<STYLE TYPE="text/css">
-<!--
-P { margin-left:2pt; margin-right:2pt; margin-bottom:1pt;
-    margin-top:1pt; font-size:12pt; text-align:center;
-    font-family:굴림, 굴림; font-weight:normal; color:white;
-    }
-.KRCC { Name:한국어; lang:ko-KR; SAMIType:CC; }
-#STDPrn { Name:Standard Print; }
-#LargePrn { Name:Large Print (26pt); font-size:26pt; }
-#SmallPrn { Name:Small Print (14pt); font-size:14pt; }
--->
-</STYLE>
-</HEAD>
-<BODY>
-<SYNC Start=6144><P Class=KRCC>
-<font face=돋움>Lorem ipsum dolor sit amet, consectetur<br><b>Lorem ipsum dolor sit amet, consectetur</b><br>
-<font size=2>Lorem ipsum dolor sit amet, consectetur
-<SYNC Start=10102><P Class=KRCC>&nbsp;
-<SYNC Start=10122 ><P Class=ENCC>&nbsp;
-<SYNC Start=10142 ><P Class=ENCC>&nbsp;
-<SYNC Start=10162 ><P Class=ENCC>&nbsp;
-<SYNC Start=17976><P Class=KRCC>
-<font face=돋움>Lorem ipsum dolor sit amet, consectetur<br><b>Lorem ipsum dolor sit amet, consec
-tetur</b><br><font size=2>Lorem ipsum dolor sit amet, consectetur
-<SYNC Start
-=  7007908 ><P Class=ENCC>&nbsp;
-<SYNC Start
-=  7007918 ><P Class=ENCC>&nbsp;
-<SYNC Start
-=  7007920 ><P Class=ENCC>&nbsp;
-</BODY>
-</SAMI>
-`;
-        const captions = this.parseSmiFile(xxx);
-        console.log(captions);
 
 
     },
@@ -75,9 +45,18 @@ tetur</b><br><font size=2>Lorem ipsum dolor sit amet, consectetur
     },
     methods: {
 
+        getCaptionsInRange(captions, timeline) {
+
+            return captions.filter((caption) => {
+                return caption.start <= timeline && caption.end >= timeline;
+            });
+        },
+
         getRequest(url) {
             return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();
+
+                xhr.overrideMimeType(' text/plain; charset=euc-kr'); // Content-Type을 UTF-8로 설정
 
                 xhr.onreadystatechange = function () {
                     if (this.readyState === XMLHttpRequest.DONE) {
@@ -101,19 +80,42 @@ tetur</b><br><font size=2>Lorem ipsum dolor sit amet, consectetur
             // Parse the SMI content into WebVTT format
             const tree = parser.parse(smiContent);
 
-            console.log(tree);
-
             // Extract the captions from the WebVTT format
-            // const captions = parser.cues.map((cue) => ({
-            //     start: cue.startTime * 1000, // Convert to milliseconds
-            //     end: cue.endTime * 1000, // Convert to milliseconds
-            //     text: cue.text,
-            // }));
+            const captions = tree.cues.map((cue) => ({
+                start: cue.startTime, // Convert to milliseconds
+                end: cue.endTime, // Convert to milliseconds
+                text: cue.text,
+            }));
 
-            return null;
+            return captions;
         },
 
 
+
+
+        // SMI 파일을 VTT 파일로 변환하는 함수
+        smiToVtt(smiContent) {
+            // SMI 파일의 자막 데이터 부분 추출
+            const syncRegex = /<sync start=(\d+)><p[^>]*>(.*?)<\/p>/g;
+            let match;
+            let vttContent = "WEBVTT\n\n"; // VTT 파일의 시작 부분
+            while ((match = syncRegex.exec(smiContent)) !== null) {
+                const start = this.convertMillisecondsToVttTime(match[1]);
+                const text = match[2].replace(/(<br>)+/gi, "\n"); // <br> 태그를 개행 문자로 변환
+                const end = this.convertMillisecondsToVttTime(parseInt(match[1], 10) + text.length * 100); // VTT는 종료 시간을 지정해야 함
+                vttContent += `${start} --> ${end}\n${text}\n\n`;
+            }
+            return vttContent;
+        },
+
+        // 밀리초 단위를 VTT 시간 형식으로 변환하는 함수
+        convertMillisecondsToVttTime(milliseconds) {
+            const hours = Math.floor(milliseconds / (60 * 60 * 1000));
+            const minutes = Math.floor(milliseconds / (60 * 1000)) % 60;
+            const seconds = Math.floor(milliseconds / 1000) % 60;
+            const ms = (milliseconds % 1000).toString().padStart(3, "0");
+            return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}.${ms}`;
+        },
 
 
 
@@ -131,6 +133,19 @@ tetur</b><br><font size=2>Lorem ipsum dolor sit amet, consectetur
         async timerAction() {
             const sec = await this.$refs.youtube.player.getCurrentTime();
             this.currentTime = sec;
+
+            this.currentCC = [];
+            if (this.vtt.length != 0) {
+                const arr = this.getCaptionsInRange(this.vtt, this.currentTime);
+                if (arr.length != 0) {
+                    arr.map((buffer)=>{
+                        // console.log(buffer.text);
+                        this.currentCC.push(buffer.text);
+                    })
+                }
+            }
+            
+
         },
 
         convertTimeToSeconds(timeStr) {
@@ -183,6 +198,10 @@ tetur</b><br><font size=2>Lorem ipsum dolor sit amet, consectetur
             @ended="onEnded" @paused="onPaused" @played="onPlayed" />
     </div>
 
+    <div>
+        디버그 모드 : {{ debug }}
+    </div>
+
     <div v-if="debug" style="background-color:#fafafa;border-top:1px solid #ddd;padding:8px 16px;">
         <div>
             <!--youtube.player.getCurrentTime()-->
@@ -190,11 +209,25 @@ tetur</b><br><font size=2>Lorem ipsum dolor sit amet, consectetur
             <div>{{ currentTime }}</div>
         </div>
 
+        <br />
+        <hr />
 
-        <button @click="applyConfig">Apply</button>
-        <button @click="playCurrentVideo">Play</button>
-        <button @click="stopCurrentVideo">Stop</button>
-        <button @click="pauseCurrentVideo">Pause</button>
+        <div>
+            
+            비디오 상태 : {{ video }}<br />
+            갱신 주기 : {{ timeCheck }}<br />
+            타이머 아이디 : {{ timer }}<br />
+        </div>
+
+        <div>
+            실시간 자막 : 
+            {{ currentCC }}
+        </div>
+
+        <button @click="applyConfig">적용</button>
+        <button @click="playCurrentVideo">재생</button>
+        <button @click="stopCurrentVideo">중지</button>
+        <button @click="pauseCurrentVideo">정지</button>
 
     </div>
 </template>
