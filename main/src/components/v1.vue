@@ -13,13 +13,16 @@ export default {
         return {
             window: window,
             debug: true,
+            playingFlag: false,
             video: { video_id: "", loop: 1 },
             currentTime: 0,
             timeCheck: 1000 / 60,
             timer: undefined,
             vtt: [],
             currentCC: [],
-            timeSync: -316.5
+            timeSync: -316.5,
+            ccEncoding : "utf-8",
+            ccPath : "https://raw.githubusercontent.com/rkdmf0000/javascript-closed-caption-runner/main/main/dist/test1.smi"
         }
     },
     mounted() {
@@ -27,7 +30,7 @@ export default {
         this.video.loop = 1;
 
 
-        this.getRequest('https://raw.githubusercontent.com/rkdmf0000/javascript-closed-caption-runner/main/main/dist/test1.smi')
+        this.getRequest(this.ccPath)
             .then(response => {
 
                 const vtt = subsrt.convert(response, { format: "vtt", fps: 25 });
@@ -58,7 +61,7 @@ export default {
             return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();
 
-                xhr.overrideMimeType(' text/plain; charset=utf-8'); // Content-Type을 UTF-8로 설정
+                xhr.overrideMimeType(` text/plain; charset=${this.ccEncoding}`); // Content-Type을 UTF-8로 설정
 
                 xhr.onreadystatechange = function () {
                     if (this.readyState === XMLHttpRequest.DONE) {
@@ -179,14 +182,17 @@ export default {
         onPlayed() {
             console.log("## OnPlayed")
             this.startTimer();
+            this.playingFlag = true;
         },
         onEnded() {
             console.log("## OnEnded")
             this.stopTimer();
+            this.playingFlag = false;
         },
         onPaused() {
             console.log("## OnPaused")
             this.stopTimer();
+            this.playingFlag = false;
         },
 
     },
@@ -223,6 +229,8 @@ export default {
             갱신 주기 : {{ timeCheck }}<br />
             타이머 아이디 : {{ timer }}<br />
             타임 싱크 : {{ timeSync }}<br />
+            자막 경로 : {{ ccPath }}<br />
+            자막 인코딩 : {{ ccEncoding }}<br />
         </div>
 
         <div>
@@ -237,14 +245,12 @@ export default {
 
     </div>
 
-    <div style="z-index:2;position:fixed;bottom:10%;left:0;right:0;">
-
+    <div v-if="playingFlag" style="z-index:2;position:fixed;bottom:10%;left:0;right:0;">
         <div style="position:absolute;bottom:0;left:0;font-size: 24px;left: 50%;transform: translateX(-50%);" class="ccarea">
             <div v-for="(buffer, index) in currentCC" :key="index">
                 <p style="background: rgb(0 0 0 / 69%);color:#fafafa;" v-html="buffer"></p>
             </div>
         </div>
-
     </div>
 </template>
 
