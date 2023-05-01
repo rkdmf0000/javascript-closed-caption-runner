@@ -241,7 +241,7 @@ export default {
 
         <div style="position:absolute;bottom:0;left:0;font-size: 24px;left: 50%;transform: translateX(-50%);" class="ccarea">
             <div v-for="(buffer, index) in currentCC" :key="index">
-                <p style="background: rgb(0 0 0 / 69%);color:#fafafa;">{{ buffer }}</p>
+                <p style="background: rgb(0 0 0 / 69%);color:#fafafa;" v-html="buffer"></p>
             </div>
         </div>
 
