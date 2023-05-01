@@ -6,6 +6,13 @@ import subsrt from 'subsrt'
 
 //https://github.com/papnkukn/subsrt
 
+
+//smi example : https://raw.githubusercontent.com/rkdmf0000/javascript-closed-caption-runner/main/main/dist/test1.smi
+//싱크 : -316.5
+
+//srt exmaple : https://raw.githubusercontent.com/rkdmf0000/cc-collection/main/back%20number%20-%20%E6%B0%B4%E5%B9%B3%E7%B7%9A.srt
+//싱크 : 0
+
 export default {
 
     name: 'App',
@@ -20,9 +27,9 @@ export default {
             timer: undefined,
             vtt: [],
             currentCC: [],
-            timeSync: -316.5,
+            timeSync: 0,
             ccEncoding : "utf-8",
-            ccPath : "https://raw.githubusercontent.com/rkdmf0000/javascript-closed-caption-runner/main/main/dist/test1.smi"
+            ccPath : "https://raw.githubusercontent.com/rkdmf0000/cc-collection/main/back%20number%20-%20%E6%B0%B4%E5%B9%B3%E7%B7%9A.srt"
         }
     },
     mounted() {
@@ -166,7 +173,7 @@ export default {
         applyConfig() {
             this.video = {
                 loop: 0,
-                video_id: "-fIXwwOhVb8"
+                video_id: "iqEr3P78fz8"
             }
         },
         playCurrentVideo() {
