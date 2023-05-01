@@ -17,7 +17,8 @@ export default {
             timeCheck: 1000/60,
             timer: undefined,
             vtt: [],
-            currentCC: []
+            currentCC: [],
+            timeSync: -316.5
         }
     },
     mounted() {
@@ -56,7 +57,7 @@ export default {
             return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();
 
-                xhr.overrideMimeType(' text/plain; charset=euc-kr'); // Content-Type을 UTF-8로 설정
+                xhr.overrideMimeType(' text/plain; charset=utf-8'); // Content-Type을 UTF-8로 설정
 
                 xhr.onreadystatechange = function () {
                     if (this.readyState === XMLHttpRequest.DONE) {
@@ -82,8 +83,8 @@ export default {
 
             // Extract the captions from the WebVTT format
             const captions = tree.cues.map((cue) => ({
-                start: cue.startTime, // Convert to milliseconds
-                end: cue.endTime, // Convert to milliseconds
+                start: cue.startTime + this.timeSync, // Convert to milliseconds
+                end: cue.endTime + this.timeSync, // Convert to milliseconds
                 text: cue.text,
             }));
 
@@ -161,7 +162,7 @@ export default {
         applyConfig() {
             this.video = {
                 loop: 0,
-                video_id: "hlNWfslbSGA"
+                video_id: "-fIXwwOhVb8"
             }
         },
         playCurrentVideo() {
@@ -206,7 +207,9 @@ export default {
         <div>
             <!--youtube.player.getCurrentTime()-->
             <label>재생 시간</label>
-            <div>{{ currentTime }}</div>
+            <div>
+                ({{ convertMillisecondsToVttTime(currentTime * 1000) }})
+            </div>
         </div>
 
         <br />
@@ -217,6 +220,7 @@ export default {
             비디오 상태 : {{ video }}<br />
             갱신 주기 : {{ timeCheck }}<br />
             타이머 아이디 : {{ timer }}<br />
+            타임 싱크 : {{ timeSync }}<br />
         </div>
 
         <div>
