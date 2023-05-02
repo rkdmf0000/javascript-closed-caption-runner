@@ -65,6 +65,10 @@ export default {
             });
         },
 
+        replaceNewLineWithBreak(str) {
+            return str.replace(/\n/g, "<br>");
+        },
+
         getRequest(url) {
             return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();
@@ -274,7 +278,7 @@ export default {
         <div style="position:absolute;bottom:0;left:0;font-size: 16px;left: 50%;transform: translateX(-50%);"
             class="ccarea">
             <div v-for="(buffer, index) in currentCC" :key="index">
-                <p style="background: rgb(0 0 0 / 69%);color:#fafafa;" v-html="buffer"></p>
+                <p style="background: rgb(0 0 0 / 69%);color:#fafafa;" v-html="replaceNewLineWithBreak(buffer)"></p>
             </div>
         </div>
     </div>
