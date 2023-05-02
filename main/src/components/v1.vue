@@ -27,16 +27,37 @@ export default {
             timeCheck: 1000 / 30,
             timer: undefined,
             vtt: [],
+            videoIframe: undefined,
             currentCC: [],
             timeSync: Number(getParam["cc_sync"]) ?? 0,
             ccEncoding: getParam["cc_encode"] ?? "utf-8",
             ccPath: getParam["cc_uri"] ?? "https://raw.githubusercontent.com/rkdmf0000/cc-collection/main/back%20number%20-%20%E6%B0%B4%E5%B9%B3%E7%B7%9A.srt"
         }
     },
-    mounted() {
+    async mounted() {
         this.video.video_id = location.hash.substring(1, 99);
         this.video.loop = 1;
 
+        this.window.addEventListener('message', function(data) {
+            console.log(data.origin);
+            if (data.origin == "https://www.youtube.com") {
+                console.log(JSON.parse(data.data));
+            }
+        });
+
+
+        console.log(this.$refs.youtube.player);
+        this.$refs.youtube.player.on("ready", async ()=>{
+            this.videoIframe = await this.$refs.youtube.player.getIframe();
+
+
+
+            console.log(this.videoIframe.contentWindow.postMessage());
+        })
+
+
+
+        //ytp-caption-window-container
 
         this.getRequest(this.ccPath)
             .then(response => {
@@ -148,6 +169,7 @@ export default {
         },
 
         async timerAction() {
+            
             const sec = await this.$refs.youtube.player.getCurrentTime();
             this.currentTime = sec;
 
@@ -199,7 +221,6 @@ export default {
             }
         },
         playCurrentVideo() {
-
             this.$refs.youtube.player.playVideo();
         },
         stopCurrentVideo() {
@@ -207,6 +228,10 @@ export default {
         },
         pauseCurrentVideo() {
             this.$refs.youtube.player.pauseVideo();
+
+        },
+        onReady(){
+            console.log("## onReady")
         },
         onPlayed() {
             console.log("## OnPlayed")
@@ -232,7 +257,7 @@ export default {
 <template>
     <YoutubeVue3 style="z-index:1; position:fixed;top:0;bottom:0;left:0;right:0;" ref="youtube" :controls="1"
         :videoid="video.video_id" :loop="video.loop" :width="window.innerWidth" :height="window.innerHeight"
-        @ended="onEnded" @paused="onPaused" @played="onPlayed" />
+        @ended="onEnded" @paused="onPaused" @played="onPlayed" @ready="onReady"  />
 
 
     <div v-if="debug"
@@ -292,6 +317,10 @@ export default {
     position: relative;
 }
 
+
+</style>
+
+<style scoped>
 .ccarea {
     display: block;
     text-align: center;
