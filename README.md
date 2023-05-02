@@ -1,4 +1,9 @@
-## JavaScript Closed Caption Runner Widget for YouTube
+# JavaScript Closed Caption Runner Widget for YouTube
+
+------------
+### Note: Full-screen mode is not yet supported.
+
+------------
 
 The JavaScript Closed Caption Runner widget was created to address the issue of certain YouTube videos having disabled captions, which can prevent visually impaired individuals from fully enjoying the content. By using this widget, users can enable closed captions for such videos and enjoy them fully.
 
