@@ -1,10 +1,8 @@
 # javascript-closed-caption-runner Blog widget for YouTube
 
-This widget is designed to work only on YouTube videos. It was created to solve the problem of closed captions being disabled on certain YouTube videos.
+1. This widget was developed to address the issue of certain YouTube videos having disabled captions, which can prevent visually impaired individuals from fully enjoying the content. By using this widget, users can enable closed captions for such videos and enjoy them fully.
 
-The widget uses a publicly available online repository for the closed caption files, as the creator does not have the resources to host their own server.
-
-Here's the URL that should be entered into an iframe:
+2. The closed caption file is not hosted on a separate server, as I personally do not have the resources to host it. Instead, I recommend using a public online storage service for hosting the file.
 
 ```text
 https://rkdmf0000.github.io/javascript-closed-caption-runner/main/dist/
