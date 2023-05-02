@@ -1,5 +1,3 @@
-Sure, here's the reformatted markdown file with the added information that the widget only works on YouTube:
-
 # javascript-closed-caption-runner Blog widget for YouTube
 
 This widget is designed to work only on YouTube videos. Here's the URL that should be entered into an iframe:
