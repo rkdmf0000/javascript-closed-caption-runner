@@ -17,19 +17,20 @@ export default {
 
     name: 'App',
     data() {
+        const getParam = this.getQueryParams();
         return {
             window: window,
-            debug: true,
+            debug: (getParam["debug"] == "1" ? true : false),
             playingFlag: false,
             video: { video_id: "", loop: 1 },
             currentTime: 0,
-            timeCheck: 1000 / 60,
+            timeCheck: 1000 / 30,
             timer: undefined,
             vtt: [],
             currentCC: [],
-            timeSync: 0,
-            ccEncoding : "utf-8",
-            ccPath : "https://raw.githubusercontent.com/rkdmf0000/cc-collection/main/back%20number%20-%20%E6%B0%B4%E5%B9%B3%E7%B7%9A.srt"
+            timeSync: Number(getParam["cc_sync"]) ?? 0,
+            ccEncoding: getParam["cc_encode"] ?? "utf-8",
+            ccPath: getParam["cc_uri"] ?? "https://raw.githubusercontent.com/rkdmf0000/cc-collection/main/back%20number%20-%20%E6%B0%B4%E5%B9%B3%E7%B7%9A.srt"
         }
     },
     mounted() {
@@ -159,7 +160,24 @@ export default {
 
 
         },
+        getQueryParams() {
+            const queryParams = {};
+            const searchParams = new URLSearchParams(location.search);
 
+            for (let [param, value] of searchParams.entries()) {
+                if (queryParams[param]) {
+                    if (Array.isArray(queryParams[param])) {
+                        queryParams[param].push(value);
+                    } else {
+                        queryParams[param] = [queryParams[param], value];
+                    }
+                } else {
+                    queryParams[param] = value;
+                }
+            }
+
+            return queryParams;
+        },
         convertTimeToSeconds(timeStr) {
             const timeArr = timeStr.split(':').map(parseFloat);
             const hours = timeArr[0] * 3600;
@@ -208,9 +226,9 @@ export default {
 
 
 <template>
-    <YoutubeVue3 style="z-index:1; position:fixed;top:0;bottom:0;left:0;right:0;" ref="youtube" :controls="1" :videoid="video.video_id"
-        :loop="video.loop" :width="window.innerWidth" :height="window.innerHeight" @ended="onEnded" @paused="onPaused"
-        @played="onPlayed" />
+    <YoutubeVue3 style="z-index:1; position:fixed;top:0;bottom:0;left:0;right:0;" ref="youtube" :controls="1"
+        :videoid="video.video_id" :loop="video.loop" :width="window.innerWidth" :height="window.innerHeight"
+        @ended="onEnded" @paused="onPaused" @played="onPlayed" />
 
 
     <div v-if="debug"
@@ -253,7 +271,8 @@ export default {
     </div>
 
     <div v-if="playingFlag" style="z-index:2;position:fixed;bottom:10%;left:0;right:0;">
-        <div style="position:absolute;bottom:0;left:0;font-size: 24px;left: 50%;transform: translateX(-50%);" class="ccarea">
+        <div style="position:absolute;bottom:0;left:0;font-size: 24px;left: 50%;transform: translateX(-50%);"
+            class="ccarea">
             <div v-for="(buffer, index) in currentCC" :key="index">
                 <p style="background: rgb(0 0 0 / 69%);color:#fafafa;" v-html="buffer"></p>
             </div>
