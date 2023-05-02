@@ -5,7 +5,7 @@
 
 ------------
 
-The JavaScript Closed Caption Runner widget was created to solve the problem of some YouTube videos having disabled captions, which can prevent individuals with hearing impairments from fully enjoying the content. By using this widget, users can enable closed captions for such videos and enjoy them fully.
+The JavaScript Closed Caption Runner widget was created to address the issue of certain YouTube videos having disabled captions, which can prevent individuals with hearing impairments from fully enjoying the content. By using this widget, users can enable closed captions for such videos and enjoy them to the fullest.
 
 The widget is built using the `youtube-vue3` library, which provides a Vue 3 component for embedding YouTube videos. Additionally, it uses the `webvtt-parser` library for parsing WebVTT files and the `subsrt` library for parsing SRT files.
 
