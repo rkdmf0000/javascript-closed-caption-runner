@@ -33,6 +33,10 @@ The following parameters can be used in the URL:
 - `cc_uri` - Specifies the URL of the closed captions file.
 - `#` Youtube video_id - Specifies the ID of the YouTube video.
 
+You can also use the following attributes that are supported by YouTube:
+allowfullscreen="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" ... etc
+
+
 ### Example
 
 Here's an example of a URL that includes all of the parameters:
