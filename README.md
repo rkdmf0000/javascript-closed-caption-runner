@@ -1,8 +1,8 @@
-Here's the markdown file reformatted in English for better readability:
+Sure, here's the reformatted markdown file with the added information that the widget only works on YouTube:
 
-# javascript-closed-caption-runner Blog widget for youtube
+# javascript-closed-caption-runner Blog widget for YouTube
 
-This is the URL that should be entered into an iframe:
+This widget is designed to work only on YouTube videos. Here's the URL that should be entered into an iframe:
 
 ```text
 https://rkdmf0000.github.io/javascript-closed-caption-runner/main/dist/
