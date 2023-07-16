@@ -34,7 +34,10 @@ export default {
             ccPath: getParam["cc_uri"] ?? "https://raw.githubusercontent.com/rkdmf0000/cc-collection/main/back%20number%20-%20%E6%B0%B4%E5%B9%B3%E7%B7%9A.srt"
         }
     },
+
+    
     async mounted() {
+     //변경됨
         this.video.video_id = location.hash.substring(1, 99);
         this.video.loop = 1;
 
