@@ -39,20 +39,20 @@ export default {
         this.video.loop = 1;
 
         this.window.addEventListener('message', function(data) {
-            console.log(data.origin);
+            //console.log(data.origin);
             if (data.origin == "https://www.youtube.com") {
-                console.log(JSON.parse(data.data));
+                //console.log(JSON.parse(data.data));
             }
         });
 
 
-        console.log(this.$refs.youtube.player);
+        //console.log(this.$refs.youtube.player);
         this.$refs.youtube.player.on("ready", async ()=>{
             this.videoIframe = await this.$refs.youtube.player.getIframe();
 
 
 
-            console.log(this.videoIframe.contentWindow.postMessage());
+            //console.log(this.videoIframe.contentWindow.postMessage());
         })
 
 
@@ -231,20 +231,20 @@ export default {
 
         },
         onReady(){
-            console.log("## onReady")
+            //console.log("## onReady")
         },
         onPlayed() {
-            console.log("## OnPlayed")
+            //console.log("## OnPlayed")
             this.startTimer();
             this.playingFlag = true;
         },
         onEnded() {
-            console.log("## OnEnded")
+            //console.log("## OnEnded")
             this.stopTimer();
             this.playingFlag = false;
         },
         onPaused() {
-            console.log("## OnPaused")
+            //console.log("## OnPaused")
             this.stopTimer();
             this.playingFlag = false;
         },
