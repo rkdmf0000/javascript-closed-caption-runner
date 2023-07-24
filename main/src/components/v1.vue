@@ -269,7 +269,7 @@ export default {
 
 
 <template>
-    <YoutubeVue3 style="z-index:1; position:fixed;top:0;bottom:0;left:0;right:0;" ref="youtube" :controls="1"
+    <YoutubeVue3 style="z-index:1; position:fixed;top:0;bottom:0;left:0;right:0;width:100%;height:100%;" ref="youtube" :controls="1"
         :videoid="video.video_id" :loop="video.loop" :width="width" :height="height"
         @ended="onEnded" @paused="onPaused" @played="onPlayed" @ready="onReady"  />
 
