@@ -19,6 +19,8 @@ export default {
     data() {
         const getParam = this.getQueryParams();
         return {
+            width: 0,
+            height: 0,
             window: window,
             debug: (getParam["debug"] == "1" ? true : false),
             playingFlag: false,
@@ -37,7 +39,11 @@ export default {
 
     
     async mounted() {
-     //변경됨
+
+        window.addEventListener('resize', this.updateDimensions);
+        this.updateDimensions();
+
+        //변경됨
         this.video.video_id = location.hash.substring(1, 99);
         this.video.loop = 1;
 
@@ -81,6 +87,11 @@ export default {
         YoutubeVue3,
     },
     methods: {
+
+        updateDimensions() {
+            this.width = window.innerWidth;
+            this.height = window.innerHeight;
+        },
 
         getCaptionsInRange(captions, timeline) {
 
@@ -259,7 +270,7 @@ export default {
 
 <template>
     <YoutubeVue3 style="z-index:1; position:fixed;top:0;bottom:0;left:0;right:0;" ref="youtube" :controls="1"
-        :videoid="video.video_id" :loop="video.loop" :width="window.innerWidth" :height="window.innerHeight"
+        :videoid="video.video_id" :loop="video.loop" :width="width" :height="height"
         @ended="onEnded" @paused="onPaused" @played="onPlayed" @ready="onReady"  />
 
 
