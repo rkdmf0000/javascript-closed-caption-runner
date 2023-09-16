@@ -54,6 +54,9 @@ And here's an example of how the iframe should look like:
 Please note that the `src` attribute of the iframe needs to be adjusted based on your needs.
 
 
+[DEMO PLAY 1](https://rkdmf0000.github.io/javascript-closed-caption-runner/main/dist?debug=0&cc_sync=0&cc_encode=utf-8&cc_uri=https://raw.githubusercontent.com/rkdmf0000/cc-collection/main/%E3%81%9D%E3%82%93%E3%81%AAbitter%E3%81%AA%E8%A9%B1%20-%20Vaundy%EF%BC%9AMUSIC%20VIDEO.srt#V-gxqhWEbxI)
 
-[DEMO PLAY](https://rkdmf0000.github.io/javascript-closed-caption-runner/main/dist?debug=0&cc_sync=0&cc_encode=utf-8&cc_uri=https://raw.githubusercontent.com/rkdmf0000/cc-collection/main/back%20number%20-%20%E6%B0%B4%E5%B9%B3%E7%B7%9A.srt#iqEr3P78fz8)
+[DEMO PLAY2](https://rkdmf0000.github.io/javascript-closed-caption-runner/main/dist?debug=0&cc_sync=0&cc_encode=utf-8&cc_uri=https://raw.githubusercontent.com/rkdmf0000/cc-collection/main/back%20number%20-%20%E6%B0%B4%E5%B9%B3%E7%B7%9A.srt#iqEr3P78fz8)
+
+
 
